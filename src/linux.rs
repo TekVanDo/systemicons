@@ -7,14 +7,10 @@ lazy_static::lazy_static! {
     static ref SHARED_MIME_INFO: xdg_mime::SharedMimeInfo = xdg_mime::SharedMimeInfo::new();
 }
 
-pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
-    let size: u16 = size
-        .try_into()
-        .map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))?;
+pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
     for mime_type in SHARED_MIME_INFO.get_mime_types_from_file_name(path) {
         for icon_name in SHARED_MIME_INFO.lookup_icon_names(&mime_type) {
             //TODO: scale and theme
-            println!("{icon_name}");
             match freedesktop_icons::lookup(&icon_name)
                 .with_size(size)
                 .with_theme("Cosmic")

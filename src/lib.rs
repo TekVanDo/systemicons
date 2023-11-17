@@ -114,6 +114,6 @@ use self::windows as imp;
 
 /// Retrieving system icon. You have to specify the file path and desired icon size (like 16, 32 or 64).
 /// Returns the icon formatted as png as byte buffer.
-pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
+pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
     imp::get_icon(path, size)
 }

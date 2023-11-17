@@ -18,8 +18,8 @@ use winapi::{
     STRUCT,
 };
 
-pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
-    fn get_icon_from_ext(path: &str, size: i32) -> HICON {
+pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
+    fn get_icon_from_ext(path: &str, size: u16) -> HICON {
         unsafe {
             let p_path = utf_16_null_terminiated(path);
             let mut file_info = SHFILEINFOW {
@@ -57,7 +57,7 @@ pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
         }
     }
 
-    fn extract_icon(path: &str, size: i32) -> HICON {
+    fn extract_icon(path: &str, size: u16) -> HICON {
         unsafe {
             let mut icon_large: HICON = ptr::null_mut();
             let mut icon_small: HICON = ptr::null_mut();
