@@ -13,10 +13,6 @@ use std::{fmt, str::Utf8Error};
 pub enum InnerError {
     IoError(std::io::Error),
     Utf8Error(Utf8Error),
-    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-    PngError(png::EncodingError),
-    #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-    UsvgError(resvg::usvg::Error),
     #[cfg(target_os = "windows")]
     ImageError(ImageError),
 }
@@ -45,26 +41,6 @@ impl From<Utf8Error> for Error {
     }
 }
 
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
-impl From<png::EncodingError> for Error {
-    fn from(error: png::EncodingError) -> Self {
-        Error {
-            message: error.to_string(),
-            inner_error: InnerError::PngError(error),
-        }
-    }
-}
-
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
-impl From<resvg::usvg::Error> for Error {
-    fn from(error: resvg::usvg::Error) -> Self {
-        Error {
-            message: error.to_string(),
-            inner_error: InnerError::UsvgError(error),
-        }
-    }
-}
-
 #[cfg(target_os = "windows")]
 impl From<ImageError> for Error {
     fn from(error: ImageError) -> Self {
@@ -86,10 +62,6 @@ impl fmt::Debug for InnerError {
         let res = match self {
             &InnerError::Utf8Error(_) => "Utf8Error".to_string(),
             &InnerError::IoError(_) => "IoError".to_string(),
-            #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-            &InnerError::PngError(_) => "PngError".to_string(),
-            #[cfg(not(any(target_os = "macos", target_os = "windows")))]
-            &InnerError::UsvgError(_) => "UsvgError".to_string(),
             #[cfg(target_os = "windows")]
             &InnerError::ImageError(_) => "ImageError".to_string(),
         };
@@ -112,8 +84,13 @@ mod windows;
 #[cfg(target_os = "windows")]
 use self::windows as imp;
 
+pub enum Icon {
+    Png(Vec<u8>),
+    Svg(Vec<u8>),
+}
+
 /// Retrieving system icon. You have to specify the file path and desired icon size (like 16, 32 or 64).
 /// Returns the icon formatted as png as byte buffer.
-pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
+pub fn get_icon(path: &str, size: u16) -> Result<Icon, Error> {
     imp::get_icon(path, size)
 }

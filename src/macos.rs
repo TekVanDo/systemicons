@@ -1,4 +1,4 @@
-use crate::Error;
+use crate::{Error, Icon};
 use cocoa::{
     base::{id, nil},
     foundation::NSSize,
@@ -13,7 +13,7 @@ enum NSBitmapImageFileType {
     NSBitmapImageFileTypePNG = 4,
 }
 
-pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
+pub fn get_icon(path: &str, size: u16) -> Result<Icon, Error> {
     let size: f64 = size.into();
     unsafe {
         // convert &str to NSString
@@ -41,6 +41,6 @@ pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
         let bytes = slice::from_raw_parts(ptr, length).to_vec();
         let _: () = msg_send![image_rep, autorelease];
 
-        Ok(bytes)
+        Ok(Icon::Png(bytes))
     }
 }
