@@ -1,5 +1,5 @@
 use resvg::usvg::TreeParsing;
-use std::{convert::TryInto, fs, io};
+use std::{fs, io};
 
 use crate::Error;
 
