@@ -14,19 +14,8 @@ struct GetIcon {
     size: i32,
 }
 
-#[cfg(target_os = "linux")]
-fn init() {
-    gtk::init().unwrap();
-}
-#[cfg(target_os = "windows")]
-fn init() {}
-#[cfg(target_os = "macos")]
-fn init() {}
-
 #[tokio::main]
 async fn main() {
-    init();
-
     async fn get_icon(param: GetIcon) -> Result<impl warp::Reply, warp::Rejection> {
         let bytes = systemicons::get_icon(&param.ext, param.size).unwrap();
         let body = hyper::Body::from(bytes);
