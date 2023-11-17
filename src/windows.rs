@@ -18,10 +18,10 @@ use winapi::{
     STRUCT,
 };
 
-pub fn get_icon(ext: &str, size: i32) -> Result<Vec<u8>, Error> {
-    fn get_icon_from_ext(ext: &str, size: i32) -> HICON {
+pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
+    fn get_icon_from_ext(path: &str, size: i32) -> HICON {
         unsafe {
-            let p_path = utf_16_null_terminiated(ext);
+            let p_path = utf_16_null_terminiated(path);
             let mut file_info = SHFILEINFOW {
                 dwAttributes: 0,
                 hIcon: ptr::null_mut(),
@@ -73,18 +73,18 @@ pub fn get_icon(ext: &str, size: i32) -> Result<Vec<u8>, Error> {
         }
     }
     unsafe {
-        let mut icon = if ext.to_lowercase().ends_with(".exe") {
-            let mut icon = extract_icon(ext, size);
+        let mut icon = if path.to_lowercase().ends_with(".exe") {
+            let mut icon = extract_icon(path, size);
             if icon == ptr::null_mut() {
-                if let Some(pos) = ext.find(".exe") {
-                    icon = get_icon_from_ext(&ext[pos..], size);
+                if let Some(pos) = path.find(".exe") {
+                    icon = get_icon_from_ext(&path[pos..], size);
                 } else {
                     icon = extract_icon("C:\\Windows\\system32\\SHELL32.dll", size);
                 }
             }
             icon
         } else {
-            get_icon_from_ext(ext, size)
+            get_icon_from_ext(path, size)
         };
         if icon == ptr::null_mut() {
             icon = extract_icon("C:\\Windows\\system32\\SHELL32.dll", size);

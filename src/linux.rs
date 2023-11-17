@@ -1,11 +1,5 @@
 use resvg::usvg::TreeParsing;
-use std::{
-    convert::TryInto,
-    ffi::OsStr,
-    fs::{self, File},
-    io::{self, Read},
-    path::PathBuf,
-};
+use std::{convert::TryInto, fs, io};
 
 use crate::Error;
 
@@ -13,13 +7,11 @@ lazy_static::lazy_static! {
     static ref SHARED_MIME_INFO: xdg_mime::SharedMimeInfo = xdg_mime::SharedMimeInfo::new();
 }
 
-pub fn get_icon(ext: &str, size: i32) -> Result<Vec<u8>, Error> {
+pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
     let size: u16 = size
         .try_into()
         .map_err(|err| io::Error::new(io::ErrorKind::InvalidInput, err))?;
-    //TODO: take path instead of extension
-    let file_name = format!("file.{}", ext);
-    for mime_type in SHARED_MIME_INFO.get_mime_types_from_file_name(&file_name) {
+    for mime_type in SHARED_MIME_INFO.get_mime_types_from_file_name(path) {
         for icon_name in SHARED_MIME_INFO.lookup_icon_names(&mime_type) {
             //TODO: scale and theme
             println!("{icon_name}");

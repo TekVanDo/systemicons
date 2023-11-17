@@ -10,14 +10,14 @@ use warp::{
 
 #[derive(Deserialize)]
 struct GetIcon {
-    ext: String,
+    path: String,
     size: i32,
 }
 
 #[tokio::main]
 async fn main() {
     async fn get_icon(param: GetIcon) -> Result<impl warp::Reply, warp::Rejection> {
-        let bytes = systemicons::get_icon(&param.ext, param.size).unwrap();
+        let bytes = systemicons::get_icon(&param.path, param.size).unwrap();
         let body = hyper::Body::from(bytes);
         let mut response = Response::new(body);
         let headers = response.headers_mut();

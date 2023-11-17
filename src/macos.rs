@@ -13,12 +13,12 @@ enum NSBitmapImageFileType {
     NSBitmapImageFileTypePNG = 4,
 }
 
-pub fn get_icon(ext: &str, size: i32) -> Result<Vec<u8>, Error> {
+pub fn get_icon(path: &str, size: i32) -> Result<Vec<u8>, Error> {
     let size: f64 = size.into();
     unsafe {
         // convert &str to NSString
         let ns_source_path: id =
-            msg_send![class!(NSString), stringWithCString: CString::new(ext).unwrap()];
+            msg_send![class!(NSString), stringWithCString: CString::new(path).unwrap()];
 
         // get shared workspace
         let ns_workspace: id = msg_send![class!(NSWorkspace), sharedWorkspace];
