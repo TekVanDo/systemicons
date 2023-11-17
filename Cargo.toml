@@ -5,6 +5,7 @@ description = "With this lib you can retrive the system icon which is associated
 authors = [
     "Uwe Riegel <uriegel@hotmail.de>",
     "Victor Aremu <victor.olorunbumi@gmail.com>",
+    "Jeremy Soller <jeremy@system76.com>",
 ]
 edition = "2021"
 license = "MIT"
