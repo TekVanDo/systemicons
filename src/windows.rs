@@ -1,4 +1,4 @@
-use crate::{Error, Icon};
+use crate::{Error};
 use image::ImageFormat;
 use std::{mem, ptr, time};
 use winapi::{
@@ -18,7 +18,7 @@ use winapi::{
     STRUCT,
 };
 
-pub fn get_icon(path: &str, size: u16) -> Result<Icon, Error> {
+pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
     fn get_icon_from_ext(path: &str, size: u16) -> HICON {
         unsafe {
             let p_path = utf_16_null_terminiated(path);
@@ -227,7 +227,7 @@ pub fn get_icon(path: &str, size: u16) -> Result<Icon, Error> {
         DeleteObject(icon_info.hbmColor as HGDIOBJ);
         DeleteObject(icon_info.hbmMask as HGDIOBJ);
 
-        Ok(Icon::Png(png_bytes))
+        Ok(png_bytes)
     }
 }
 

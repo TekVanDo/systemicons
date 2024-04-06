@@ -69,11 +69,6 @@ impl fmt::Debug for InnerError {
     }
 }
 
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
-mod linux;
-#[cfg(not(any(target_os = "macos", target_os = "windows")))]
-use self::linux as imp;
-
 #[cfg(target_os = "macos")]
 mod macos;
 #[cfg(target_os = "macos")]
@@ -84,13 +79,8 @@ mod windows;
 #[cfg(target_os = "windows")]
 use self::windows as imp;
 
-pub enum Icon {
-    Png(Vec<u8>),
-    Svg(Vec<u8>),
-}
-
 /// Retrieving system icon. You have to specify the file path and desired icon size (like 16, 32 or 64).
 /// Returns the icon formatted as png as byte buffer.
-pub fn get_icon(path: &str, size: u16) -> Result<Icon, Error> {
+pub fn get_icon(path: &str, size: u16) -> Result<Vec<u8>, Error> {
     imp::get_icon(path, size)
 }
